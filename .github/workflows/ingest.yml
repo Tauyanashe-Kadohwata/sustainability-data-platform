@@ -1,0 +1,33 @@
+name: Automated ESG News Data Ingestion
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest 
+    
+    steps:
+    - name: Checkout Repository Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python Engine
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Generate Fresh Mock Records
+      run: python scripts/generate_mock_data.py
+
+    # Combined Task D & E: Upload data using your secure GitHub Storage Key secret
+    - name: Sync Batch Files to Data Lake Container
+      run: |
+        az storage blob upload-batch \
+          --account-name sustdata9512 \
+          --account-key ${{ secrets.AZURE_STORAGE_KEY }} \
+          --destination raw-landing \
+          --source ./raw_landing_zone \
+          --auth-mode key
+
