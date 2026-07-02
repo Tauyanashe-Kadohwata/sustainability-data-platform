@@ -38,7 +38,7 @@ for i in range(1, 5001):
     src = random.choice(scraped_sources)
     
     # Generate unique ID, but deliberately inject duplicates every 100 records
-    article_id = f"ART-2026-{100000 + i if i % 100 != 0 else 100000 + (i - 1)}"
+    article_id = f"ART-2026-{100000 + i}"
     
     # Spread dates over the last 90 days
     random_days_ago = random.randint(0, 90)
